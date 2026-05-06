@@ -1,0 +1,121 @@
+.modal-publicar {
+  background: #162033;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  padding: 2rem 1.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideUp 0.25s ease;
+}
+
+.publicar-titulo {
+  color: #f4566a;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.publicar-error {
+  color: #f4566a;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.dropzone {
+  border: 2px dashed #f4566a;
+  border-radius: 12px;
+  background: #1e2f47;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  overflow: hidden;
+}
+
+.dropzone:hover,
+.dropzone.dragging {
+  background: #243650;
+  border-color: #ff7a8a;
+}
+
+.dropzone-texto {
+  color: #6b7a99;
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.6;
+  pointer-events: none;
+}
+
+.dropzone-texto span {
+  color: #9aa5bb;
+  font-size: 0.82rem;
+}
+
+.preview-media {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.publicar-input {
+  background: #1e2f47;
+  border: 2px solid #f4566a;
+  border-radius: 30px;
+  padding: 0.75rem 1.25rem;
+  color: #e8eaf0;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.publicar-input:focus {
+  border-color: #ff7a8a;
+}
+
+.publicar-input::placeholder {
+  color: #3a4a62;
+}
+
+.publicar-textarea {
+  background: #1e2f47;
+  border: 2px solid #f4566a;
+  border-radius: 12px;
+  padding: 0.75rem 1.25rem;
+  color: #e8eaf0;
+  font-size: 0.9rem;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.publicar-textarea:focus {
+  border-color: #ff7a8a;
+}
+
+.publicar-textarea::placeholder {
+  color: #3a4a62;
+}
+
+/* BOTÓN */
+.btn-publicar-modal {
+  background: #f4566a;
+  border: none;
+  border-radius: 30px;
+  padding: 0.85rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-publicar-modal:hover {
+  background: #ff7a8a;
+}

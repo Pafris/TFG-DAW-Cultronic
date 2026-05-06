@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import ModalEvento from '../components/ModalEvento';
+import ModalPublicar from '../components/ModalPublicar';
 import './HomePage.css';
 
 const eventosEjemplo = [
@@ -35,36 +36,38 @@ function TarjetaEvento({ evento, onClick }) {
 function HomePage() {
   const navigate = useNavigate();
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+  const [mostrarPublicar, setMostrarPublicar] = useState(false);
 
   return (
     <div className="home-bg">
-
-      {/* NAVBAR */}
       <nav className="navbar">
         <span className="navbar-logo">Nomadic</span>
         <div className="navbar-botones">
-          <button className="btn-publicar">+ Publicar</button>
+          <button className="btn-publicar" onClick={() => setMostrarPublicar(true)}>+ Publicar</button>
           <button className="btn-outline" onClick={() => navigate('/login')}>Iniciar Sesión</button>
           <button className="btn-outline" onClick={() => navigate('/registro')}>Crear Cuenta</button>
         </div>
       </nav>
 
-      {/* GRID DE EVENTOS */}
       <main className="grid-eventos">
         {eventosEjemplo.map((evento) => (
-          <TarjetaEvento 
-            key={evento.id} 
+          <TarjetaEvento
+            key={evento.id}
             evento={evento}
             onClick={() => setEventoSeleccionado(evento)}
           />
         ))}
       </main>
-      {/* MODAL — solo se renderiza si hay un evento seleccionado */}
+
       {eventoSeleccionado && (
         <ModalEvento
           evento={eventoSeleccionado}
           onCerrar={() => setEventoSeleccionado(null)}
         />
+      )}
+
+      {mostrarPublicar && (
+        <ModalPublicar onCerrar={() => setMostrarPublicar(false)} />
       )}
     </div>
   );
