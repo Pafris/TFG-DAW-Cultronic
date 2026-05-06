@@ -17,6 +17,25 @@ const eventosEjemplo = [
 ];
 
 function TarjetaEvento({ evento, onClick }) {
+  const [likes, setLikes] = useState(() => {
+    const guardado = localStorage.getItem(`likes_${evento.id}`);
+    return guardado ? parseInt(guardado) : evento.likes;
+  });
+
+  const [likeDado, setLikeDado] = useState(() => {
+    return localStorage.getItem(`liked_${evento.id}`) === 'true';
+  });
+
+  const handleLike = (e) => {
+    e.stopPropagation();
+    const nuevoLike = !likeDado;
+    const nuevosLikes = nuevoLike ? likes + 1 : likes - 1;
+    setLikeDado(nuevoLike);
+    setLikes(nuevosLikes);
+    localStorage.setItem(`liked_${evento.id}`, nuevoLike);
+    localStorage.setItem(`likes_${evento.id}`, nuevosLikes);
+  };
+
   return (
     <div className="tarjeta" onClick={onClick}>
       <img src={evento.imagen} alt={evento.titulo} className="tarjeta-img" />
@@ -24,7 +43,9 @@ function TarjetaEvento({ evento, onClick }) {
         <h3 className="tarjeta-titulo">{evento.titulo}</h3>
         <p className="tarjeta-desc">{evento.descripcion}</p>
         <div className="tarjeta-stats">
-          <span>❤️ {evento.likes}</span>
+          <span className={`stat-like ${likeDado ? 'liked' : ''}`} onClick={handleLike}>
+            ❤️ {likes}
+          </span>
           <span>💬 {evento.comentarios}</span>
           <span>🔗</span>
         </div>

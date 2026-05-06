@@ -125,3 +125,15 @@
     gap: 1rem;
   }
 }
+.stat-like {
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.stat-like:hover {
+  transform: scale(1.2);
+}
+
+.stat-like.liked {
+  filter: brightness(1.4);
+}
