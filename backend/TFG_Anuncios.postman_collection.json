@@ -1,0 +1,232 @@
+{
+	"info": {
+		"name": "TFG Anuncios y Entradas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. Autenticación (Login / Registro)",
+			"item": [
+				{
+					"name": "Registrar Usuario (Normal)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Usuario Normal\",\n    \"email\": \"usuario@test.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": ["{{base_url}}"],
+							"path": ["register"]
+						}
+					}
+				},
+				{
+					"name": "Registrar Admin (Opcional)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Admin Principal\",\n    \"email\": \"admin@test.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register",
+							"host": ["{{base_url}}"],
+							"path": ["register"]
+						}
+					}
+				},
+				{
+					"name": "Hacer Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@test.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": ["{{base_url}}"],
+							"path": ["login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "1. Rutas Públicas",
+			"item": [
+				{
+					"name": "Listar Anuncios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/anuncios",
+							"host": ["{{base_url}}"],
+							"path": ["anuncios"]
+						}
+					}
+				},
+				{
+					"name": "Detalle de Anuncio",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/anuncios/1",
+							"host": ["{{base_url}}"],
+							"path": ["anuncios", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Administrador",
+			"item": [
+				{
+					"name": "Crear Anuncio (Requiere Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titulo\": \"Gran Concierto de Rock\",\n    \"descripcion\": \"No te pierdas este evento único.\",\n    \"fecha\": \"2027-10-15\",\n    \"entradasDisponibles\": true,\n    \"cantidad\": 50,\n    \"precio\": 25.50\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/anuncios",
+							"host": ["{{base_url}}"],
+							"path": ["anuncios"]
+						}
+					}
+				},
+				{
+					"name": "Ver Mis Anuncios (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/admin/anuncios",
+							"host": ["{{base_url}}"],
+							"path": ["admin", "anuncios"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "3. Usuarios Registrados",
+			"item": [
+				{
+					"name": "Comprar Entrada",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/anuncios/1/comprar",
+							"host": ["{{base_url}}"],
+							"path": ["anuncios", "1", "comprar"]
+						}
+					}
+				},
+				{
+					"name": "Mis Entradas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/mis-entradas",
+							"host": ["{{base_url}}"],
+							"path": ["mis-entradas"]
+						}
+					}
+				},
+				{
+					"name": "Detalle de mi Entrada",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Accept", "value": "application/json"}
+						],
+						"url": {
+							"raw": "{{base_url}}/mis-entradas/1",
+							"host": ["{{base_url}}"],
+							"path": ["mis-entradas", "1"]
+						}
+					}
+				},
+				{
+					"name": "Billetera: Recargar Dinero",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"operacion\": \"agregar\",\n    \"monto\": 50.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/billetera",
+							"host": ["{{base_url}}"],
+							"path": ["billetera"]
+						}
+					}
+				},
+				{
+					"name": "Billetera: Retirar Dinero",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Accept", "value": "application/json"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"operacion\": \"quitar\",\n    \"monto\": 15.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/billetera",
+							"host": ["{{base_url}}"],
+							"path": ["billetera"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000"
+		}
+	]
+}

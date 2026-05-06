@@ -67,6 +67,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => 'USUARIO', // Forzamos a que el rol se guarde como USUARIO
+            'dinero' => 100.00,  // Le damos un saldo inicial para que pueda probar comprar entradas
         ]);
     }
 }

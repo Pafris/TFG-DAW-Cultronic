@@ -26,6 +26,22 @@ class AnuncioController extends Controller
     }
 
     /**
+     * Listar los anuncios creados por el admin autenticado (con estadísticas)
+     */
+    public function misAnunciosAdmin()
+    {
+        $anuncios = \App\Models\Anuncio::where('user_id', auth()->id())
+            ->withCount(['entradas as entradas_totales'])
+            ->withCount(['entradas as entradas_vendidas' => function ($query) {
+                $query->whereNotNull('user_id');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($anuncios);
+    }
+
+    /**
      * Crear un nuevo anuncio (solo admin - middleware en rutas)
      */
     public function store(\App\Http\Requests\StoreAnuncioRequest $request)
@@ -40,6 +56,7 @@ class AnuncioController extends Controller
             'multimedia' => $validatedData['multimedia'] ?? null,
             'fecha' => $validatedData['fecha'],
             'entradasDisponibles' => $validatedData['entradasDisponibles'],
+            'user_id' => auth()->id(), // Asociar al admin que lo crea
         ]);
 
         // 2. Lógica de generación automática de entradas

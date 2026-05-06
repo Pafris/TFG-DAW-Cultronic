@@ -12,16 +12,25 @@ class Anuncio extends Model
         'multimedia',
         'fecha',
         'entradasDisponibles',
+        'user_id'
     ];
 
-    protected function casts(): array
+    protected $casts = [
+        'fecha' => 'date',
+        'entradasDisponibles' => 'boolean',
+    ];
+
+    /**
+     * Un anuncio pertenece a un administrador
+     */
+    public function user()
     {
-        return [
-            'fecha' => 'date',
-            'entradasDisponibles' => 'boolean',
-        ];
+        return $this->belongsTo(User::class);
     }
 
+    /**
+     * Un anuncio tiene muchas entradas
+     */
     public function entradas()
     {
         return $this->hasMany(Entrada::class);

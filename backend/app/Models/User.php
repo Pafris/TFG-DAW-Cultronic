@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'rol',
+        'role',
         'dinero'
     ];
 
@@ -46,6 +46,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function anuncios()
+    {
+        return $this->hasMany(Anuncio::class);
     }
 
     public function entradas()

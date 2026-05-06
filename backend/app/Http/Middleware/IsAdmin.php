@@ -20,7 +20,11 @@ class IsAdmin
         $rol = $request->user()->rol ?? $request->user()->role;
         
         if (strtoupper($rol) !== 'ADMIN') {
-            return response()->json(['error' => 'No autorizado. Se requieren permisos de administrador.'], 403);
+            return response()->json([
+                'error' => 'No autorizado. Se requieren permisos de administrador.',
+                'debug_email' => $request->user() ? $request->user()->email : 'ninguno',
+                'debug_role_detectado' => $rol
+            ], 403);
         }
 
         return $next($request);
