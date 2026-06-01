@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ModalEvento from '../components/ModalEvento';
 import ModalPublicar from '../components/ModalPublicar';
+import { fetchAnuncios } from '../api';
 import './HomePage.css';
 
 const eventosEjemplo = [
@@ -58,6 +59,41 @@ function HomePage() {
   const navigate = useNavigate();
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
   const [mostrarPublicar, setMostrarPublicar] = useState(false);
+  const [eventos, setEventos] = useState(eventosEjemplo);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let activo = true;
+
+    const cargarAnuncios = async () => {
+      try {
+        const data = await fetchAnuncios();
+        if (!activo) return;
+
+        const items = data.map((anuncio) => ({
+          id: anuncio.id,
+          titulo: anuncio.titulo,
+          descripcion: anuncio.descripcion || 'Descripción breve del anuncio...',
+          likes: anuncio.likes ?? 0,
+          comentarios: anuncio.entradasDisponibles ?? 0,
+          imagen: anuncio.multimedia || `https://picsum.photos/seed/${anuncio.id}/400/250`,
+        }));
+
+        setEventos(items.length ? items : eventosEjemplo);
+      } catch (err) {
+        setError(err.message || 'No se pudieron cargar los anuncios.');
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarAnuncios();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   return (
     <div className="home-bg">
@@ -71,13 +107,19 @@ function HomePage() {
       </nav>
 
       <main className="grid-eventos">
-        {eventosEjemplo.map((evento) => (
-          <TarjetaEvento
-            key={evento.id}
-            evento={evento}
-            onClick={() => setEventoSeleccionado(evento)}
-          />
-        ))}
+        {cargando ? (
+          <p>Cargando anuncios...</p>
+        ) : error ? (
+          <p className="error-msg">{error}</p>
+        ) : (
+          eventos.map((evento) => (
+            <TarjetaEvento
+              key={evento.id}
+              evento={evento}
+              onClick={() => setEventoSeleccionado(evento)}
+            />
+          ))
+        )}
       </main>
 
       {eventoSeleccionado && (

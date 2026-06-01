@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { register } from '../api';
 import './LoginPage.css';
 
 function RegisterPage() {
@@ -10,7 +11,7 @@ function RegisterPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     setError('');
 
     if (!nombre || !email || !password || !confirmPassword) {
@@ -28,9 +29,17 @@ function RegisterPage() {
       return;
     }
 
-    // Aquí irá la llamada a la API cuando conectemos el back
-    
-    navigate('/login');
+    try {
+      await register({
+        name: nombre,
+        email,
+        password,
+        password_confirmation: confirmPassword,
+      });
+      navigate('/login');
+    } catch (err) {
+      setError(err.message || 'Error al crear la cuenta.');
+    }
   };
 
   return (
