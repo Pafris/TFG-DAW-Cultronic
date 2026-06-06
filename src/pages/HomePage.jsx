@@ -60,35 +60,21 @@ function TarjetaEvento({ evento, onClick }) {
 
 // Componente para tarjetas de tickets comprados
 function TarjetaTicket({ ticket, onClick }) {
-  const fechaFormateada = ticket.anuncio?.fecha 
+  const fechaFormateada = ticket.anuncio?.fecha
     ? new Date(ticket.anuncio.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
     : 'Próximamente';
 
   return (
-    <div className="tarjeta-ticket-premium" onClick={onClick}>
-      <div className="ticket-cutout-left"></div>
-      <div className="ticket-cutout-right"></div>
-      <div className="ticket-body-info">
-        <span className="ticket-category">🎫 ENTRADA OFICIAL</span>
-        <h3 className="ticket-titulo">{ticket.anuncio?.titulo || 'Evento Sin Título'}</h3>
-        <div className="ticket-details-row">
-          <div>
-            <span className="ticket-label">FECHA</span>
-            <span className="ticket-val">{fechaFormateada}</span>
-          </div>
-          <div>
-            <span className="ticket-label">PRECIO</span>
-            <span className="ticket-val">{parseFloat(ticket.precio).toFixed(2)}€</span>
-          </div>
-          <div>
-            <span className="ticket-label">TICKET ID</span>
-            <span className="ticket-val">#00{ticket.id}</span>
-          </div>
+    <div className="tarjeta-entrada" onClick={onClick}>
+      <div className="entrada-info">
+        <h3 className="entrada-titulo">{ticket.anuncio?.titulo || 'Evento sin título'}</h3>
+        <div className="entrada-meta">
+          <span>📅 {fechaFormateada}</span>
+          <span>💶 {parseFloat(ticket.precio).toFixed(2)}€</span>
+          <span className="entrada-id">#{ticket.id}</span>
         </div>
       </div>
-      <div className="ticket-side-bar">
-        <span className="ticket-vertical-code">CULTR-{ticket.id}</span>
-      </div>
+      <span className="entrada-badge">Entrada</span>
     </div>
   );
 }
