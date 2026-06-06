@@ -48,7 +48,7 @@ function TarjetaEvento({ evento, onClick }) {
         </p>
         <div className="tarjeta-footer">
           {sinEntradas ? (
-            <span className="badge-sold-out">Agotado / Sin Ventas</span>
+            <span className="badge-libre">🎟️ Entrada Libre</span>
           ) : (
             <span className="badge-disponible">🎫 Entradas Disponibles</span>
           )}
