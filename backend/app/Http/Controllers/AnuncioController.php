@@ -11,8 +11,20 @@ class AnuncioController extends Controller
      */
     public function index()
     {
-        // Obtener todos los anuncios ordenados por fecha
-        $anuncios = \App\Models\Anuncio::orderBy('created_at', 'desc')->get();
+        // Obtener todos los anuncios ordenados por fecha con estadísticas de entradas
+        $anuncios = \App\Models\Anuncio::withCount(['entradas as entradas_totales'])
+            ->withCount(['entradas as entradas_disponibles' => function ($query) {
+                $query->whereNull('user_id');
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Adjuntar precio de la primera entrada si existe
+        foreach ($anuncios as $anuncio) {
+            $primeraEntrada = \App\Models\Entrada::where('anuncio_id', $anuncio->id)->first();
+            $anuncio->precio = $primeraEntrada ? $primeraEntrada->precio : 0.00;
+        }
+
         return response()->json($anuncios);
     }
 
@@ -21,7 +33,15 @@ class AnuncioController extends Controller
      */
     public function show($id)
     {
-        $anuncio = \App\Models\Anuncio::findOrFail($id);
+        $anuncio = \App\Models\Anuncio::withCount(['entradas as entradas_totales'])
+            ->withCount(['entradas as entradas_disponibles' => function ($query) {
+                $query->whereNull('user_id');
+            }])
+            ->findOrFail($id);
+
+        $primeraEntrada = \App\Models\Entrada::where('anuncio_id', $anuncio->id)->first();
+        $anuncio->precio = $primeraEntrada ? $primeraEntrada->precio : 0.00;
+
         return response()->json($anuncio);
     }
 

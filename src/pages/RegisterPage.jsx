@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../api';
+import { register, fetchMe } from '../api';
 import './LoginPage.css';
 
 function RegisterPage() {
@@ -9,9 +9,27 @@ function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [registrando, setRegistrando] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = async () => {
+  // Comprobar si ya está logueado al cargar la página
+  useEffect(() => {
+    fetchMe()
+      .then((user) => {
+        if (user && user.id) {
+          navigate('/home');
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  }, [navigate]);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
     setError('');
 
     if (!nombre || !email || !password || !confirmPassword) {
@@ -29,6 +47,7 @@ function RegisterPage() {
       return;
     }
 
+    setRegistrando(true);
     try {
       await register({
         name: nombre,
@@ -36,57 +55,110 @@ function RegisterPage() {
         password,
         password_confirmation: confirmPassword,
       });
-      navigate('/login');
+      // Tras el registro correcto, Laravel inicia sesión de forma automática.
+      // Así que podemos redirigir a /home directamente
+      navigate('/home');
     } catch (err) {
-      setError(err.message || 'Error al crear la cuenta.');
+      setError(err.message || 'Error al crear la cuenta. Revisa los datos.');
+    } finally {
+      setRegistrando(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="page-bg">
+        <div className="loader-container">
+          <div className="loader"></div>
+          <p className="loader-text">Verificando sesión...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="page-bg">
-      <div className="card">
-        <h1 className="titulo">Crear cuenta 🎉</h1>
+      <div className="glass-card">
+        <div className="logo-section">
+          <span className="glow-logo">Cultronic</span>
+          <p className="subtitle">Únete a la experiencia</p>
+        </div>
 
-        {error && <p className="error-msg">{error}</p>}
+        <h2 className="card-titulo">Crear Cuenta</h2>
 
-        <input
-          className="input"
-          type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-        <input
-          className="input"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="input"
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          className="input"
-          type="password"
-          placeholder="Confirmar contraseña"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
+        {error && (
+          <div className="error-alert animate-shake">
+            <span>⚠️</span> {error}
+          </div>
+        )}
 
-        <button className="btn-entrar" onClick={handleRegister}>
-          Crear cuenta
-        </button>
+        <form onSubmit={handleRegister} className="form-container">
+          <div className="input-group">
+            <label className="input-label">Nombre Completo</label>
+            <input
+              className="premium-input"
+              type="text"
+              placeholder="Tu nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Correo Electrónico</label>
+            <input
+              className="premium-input"
+              type="email"
+              placeholder="ejemplo@correo.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Contraseña</label>
+            <input
+              className="premium-input"
+              type="password"
+              placeholder="Mínimo 8 caracteres"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Confirmar Contraseña</label>
+            <input
+              className="premium-input"
+              type="password"
+              placeholder="Repite tu contraseña"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="btn-primary"
+            disabled={registrando}
+          >
+            {registrando ? 'Creando cuenta...' : 'Crear Cuenta'}
+          </button>
+        </form>
+
+        <div className="divider">
+          <span>O</span>
+        </div>
 
         <p className="registro-link">
           ¿Ya tienes cuenta?{' '}
-          <a onClick={() => navigate('/login')} style={{ cursor: 'pointer' }}>
-            Inicia sesión
-          </a>
+          <span className="link-text" onClick={() => navigate('/login')}>
+            Inicia sesión aquí
+          </span>
         </p>
       </div>
     </div>

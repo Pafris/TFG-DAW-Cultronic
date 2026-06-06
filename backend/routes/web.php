@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     // Gestión de la Billetera
     Route::post('/billetera', [\App\Http\Controllers\BilleteraController::class, 'actualizarSaldo']);
+
+    // Obtener perfil del usuario autenticado
 });
 
 // 3. Rutas de Administrador
@@ -47,4 +49,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     // Ver los anuncios creados por el administrador con sus estadísticas
     Route::get('/admin/anuncios', [AnuncioController::class, 'misAnunciosAdmin']);
+});
+
+// Ruta pública para saber si hay sesión activa (devuelve user o null)
+Route::get('/me', function (\Illuminate\Http\Request $request) {
+    return response()->json(auth()->user());
 });

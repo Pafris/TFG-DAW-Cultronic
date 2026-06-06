@@ -1,121 +1,217 @@
-.modal-publicar {
-  background: #162033;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 480px;
-  padding: 2rem 1.75rem;
+/* ================================================================
+   ModalPublicar.css — Sin animaciones, estilo oscuro original
+   ================================================================ */
+
+/* El fondo oscuro lo provee ModalEvento.css (.modal-fondo) */
+
+/* ── Contenedor del modal ── */
+.modal-publicar-premium {
+  background-color: #162033;
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 520px;
   position: relative;
+  max-height: 92vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  animation: slideUp 0.25s ease;
+  gap: 1.25rem;
 }
 
-.publicar-titulo {
-  color: #f4566a;
-  font-size: 1.3rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 0.25rem;
-}
-
-.publicar-error {
-  color: #f4566a;
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-.dropzone {
-  border: 2px dashed #f4566a;
-  border-radius: 12px;
+/* ── Botón cerrar (compartido con ModalEvento) ── */
+.modal-cerrar-premium {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
   background: #1e2f47;
-  min-height: 150px;
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-  overflow: hidden;
+  z-index: 10;
 }
 
-.dropzone:hover,
-.dropzone.dragging {
-  background: #243650;
+.modal-cerrar-premium:hover {
+  background: #f4566a;
+}
+
+/* ── Cabecera del modal ── */
+.publicar-titulo-premium {
+  color: #f4566a;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.publicar-subtitle-premium {
+  color: #6b7a99;
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: -0.75rem;
+}
+
+/* ── Alerta de error ── */
+.error-alert {
+  background-color: rgba(244, 86, 106, 0.12);
+  border: 1px solid #f4566a;
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  color: #f4566a;
+  font-size: 0.88rem;
+}
+
+/* ── Formulario ── */
+.publicar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Grupos de input (compartidos con LoginPage) ── */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.input-label {
+  color: #aab8cc;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ── Inputs premium ── */
+.premium-input {
+  background-color: #1e2f47;
+  border: 2px solid #f4566a;
+  border-radius: 30px;
+  padding: 0.75rem 1.25rem;
+  color: #e0e8f0;
+  font-size: 0.95rem;
+  outline: none;
+  width: 100%;
+}
+
+.premium-input::placeholder {
+  color: #6b7f96;
+}
+
+.premium-input:focus {
   border-color: #ff7a8a;
 }
 
-.dropzone-texto {
+.text-area-pub {
+  border-radius: 14px;
+  resize: vertical;
+  min-height: 90px;
+  font-family: inherit;
+}
+
+/* ── Fila de presets multimedia ── */
+.multimedia-presets-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.35rem;
+}
+
+.preset-label {
   color: #6b7a99;
-  font-size: 0.9rem;
-  text-align: center;
-  line-height: 1.6;
-  pointer-events: none;
+  font-size: 0.8rem;
 }
 
-.dropzone-texto span {
-  color: #9aa5bb;
-  font-size: 0.82rem;
+.btn-preset-url {
+  background-color: #1e2f47;
+  border: 1px solid #f4566a;
+  color: #aab8cc;
+  border-radius: 12px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.78rem;
+  cursor: pointer;
 }
 
-.preview-media {
+.btn-preset-url:hover {
+  background-color: #f4566a;
+  color: white;
+}
+
+/* ── Preview de imagen ── */
+.multimedia-preview-box {
+  margin-top: 0.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  max-height: 150px;
+}
+
+.multimedia-preview-box img {
   width: 100%;
-  max-height: 200px;
+  height: 150px;
   object-fit: cover;
 }
 
-.publicar-input {
-  background: #1e2f47;
-  border: 2px solid #f4566a;
-  border-radius: 30px;
-  padding: 0.75rem 1.25rem;
-  color: #e8eaf0;
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s;
+/* ── Checkbox ── */
+.checkbox-group-container {
+  padding: 0.5rem 0;
 }
 
-.publicar-input:focus {
-  border-color: #ff7a8a;
+.checkbox-label-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  color: #aab8cc;
+  font-size: 0.88rem;
+  user-select: none;
 }
 
-.publicar-input::placeholder {
-  color: #3a4a62;
+.checkbox-label-wrapper input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #f4566a;
+  cursor: pointer;
 }
 
-.publicar-textarea {
-  background: #1e2f47;
-  border: 2px solid #f4566a;
-  border-radius: 12px;
-  padding: 0.75rem 1.25rem;
-  color: #e8eaf0;
-  font-size: 0.9rem;
-  outline: none;
-  resize: none;
-  font-family: inherit;
-  transition: border-color 0.2s;
+.checkbox-custom-text {
+  color: #aab8cc;
 }
 
-.publicar-textarea:focus {
-  border-color: #ff7a8a;
+/* ── Fila de campos condicionales ── */
+.conditional-fields-row {
+  display: flex;
+  gap: 0.75rem;
 }
 
-.publicar-textarea::placeholder {
-  color: #3a4a62;
+.flex-1 {
+  flex: 1;
 }
 
-/* BOTÓN */
-.btn-publicar-modal {
-  background: #f4566a;
+/* ── Botón principal ── */
+.btn-primary {
+  background-color: #f4566a;
   border: none;
   border-radius: 30px;
-  padding: 0.85rem;
+  padding: 0.9rem;
   color: white;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  width: 100%;
+  margin-top: 0.25rem;
 }
 
-.btn-publicar-modal:hover {
-  background: #ff7a8a;
+.btn-primary:hover {
+  background-color: #ff7a8a;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
