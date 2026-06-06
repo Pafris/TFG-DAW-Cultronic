@@ -14,11 +14,15 @@ import './HomePage.css';
 
 // Componente para tarjetas de eventos
 function TarjetaEvento({ evento, onClick }) {
-  // Comprobar si tiene entradas a la venta
   const sinEntradas = !evento.entradasDisponibles;
-  
+
+  // Comprobar si el evento ya ha pasado
+  const eventoFinalizado = evento.fecha
+    ? new Date(evento.fecha) < new Date(new Date().toDateString())
+    : false;
+
   // Formatear fecha
-  const fechaFormateada = evento.fecha 
+  const fechaFormateada = evento.fecha
     ? new Date(evento.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
     : 'Próximamente';
 
@@ -47,7 +51,9 @@ function TarjetaEvento({ evento, onClick }) {
             : evento.descripcion}
         </p>
         <div className="tarjeta-footer">
-          {sinEntradas ? (
+          {eventoFinalizado ? (
+            <span className="badge-finalizado">⏰ Evento Finalizado</span>
+          ) : sinEntradas ? (
             <span className="badge-libre">🎟️ Entrada Libre</span>
           ) : (
             <span className="badge-disponible">🎫 Entradas Disponibles</span>

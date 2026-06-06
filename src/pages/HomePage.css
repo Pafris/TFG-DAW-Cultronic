@@ -226,17 +226,12 @@
   flex-wrap: wrap;
   gap: 1rem;
 }
-.banner-content {
-  width: 100%;
-  text-align: center;
-}
 
 .banner-content h1 {
   color: #e8eaf0;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 0.4rem;
-  text-align: center
 }
 
 .banner-content p {
@@ -244,8 +239,6 @@
   font-size: 0.9rem;
   max-width: 520px;
   line-height: 1.5;
-  text-align: center;
-  margin: 0 auto;
 }
 
 .btn-publish-banner {
@@ -397,6 +390,16 @@
   background-color: rgba(16, 185, 129, 0.15);
   color: #10b981;
   border: 1px solid #10b981;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  font-weight: 600;
+}
+
+.badge-finalizado {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
   border-radius: 10px;
   font-size: 0.75rem;
   padding: 0.2rem 0.55rem;

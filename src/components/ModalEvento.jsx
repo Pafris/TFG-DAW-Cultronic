@@ -57,8 +57,13 @@ function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
   };
 
   const isGuest = !usuario;
-  const isUser = usuario && usuario.role === 'USUARIO';
-  const isAdmin = usuario && usuario.role === 'ADMIN';
+  const isUser = usuario && usuario.role === 'usuario';
+  const isAdmin = usuario && usuario.role === 'admin';
+
+  // Comprobar si el evento ya ha pasado
+  const eventoFinalizado = detalles?.fecha
+    ? new Date(detalles.fecha) < new Date(new Date().toDateString())
+    : false;
 
   // Formatear fechas
   const formatFecha = (f) => {
@@ -181,7 +186,14 @@ function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
                       </div>
                     )}
 
-                    {isUser && detalles.entradasDisponibles && (
+                    {eventoFinalizado && (
+                      <div className="action-warning-banner red-banner">
+                        <span>⏰</span>
+                        <p><strong>Evento finalizado.</strong> La fecha de este evento ya ha pasado y no es posible adquirir entradas.</p>
+                      </div>
+                    )}
+
+                    {isUser && detalles.entradasDisponibles && !eventoFinalizado && (
                       <>
                         {detalles.entradas_disponibles > 0 ? (
                           <div className="purchase-action-row" style={{ flexDirection: 'column', gap: '1rem', alignItems: 'stretch' }}>
