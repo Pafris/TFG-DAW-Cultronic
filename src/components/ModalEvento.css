@@ -499,3 +499,134 @@
   color: #6b7a99;
   letter-spacing: 2px;
 }
+
+/* ================================================================
+   SECCIÓN DE COMENTARIOS
+   ================================================================ */
+
+.comentarios-section {
+  border-top: 1px solid #1e2f47;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.comentarios-titulo {
+  color: #aab8cc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.comentarios-vacio {
+  color: #6b7a99;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.comentarios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Scrollbar personalizada para la lista */
+.comentarios-lista::-webkit-scrollbar {
+  width: 5px;
+}
+.comentarios-lista::-webkit-scrollbar-track {
+  background: transparent;
+}
+.comentarios-lista::-webkit-scrollbar-thumb {
+  background-color: #2a3f5f;
+  border-radius: 10px;
+}
+
+.comentario-item {
+  background-color: #1a2a42;
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  border-left: 3px solid #f4566a;
+}
+
+.comentario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.comentario-autor {
+  color: #f4566a;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.comentario-fecha {
+  color: #6b7a99;
+  font-size: 0.72rem;
+}
+
+.comentario-texto {
+  color: #c8d0e0;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Input de nuevo comentario */
+.comentario-input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.comentario-input {
+  flex: 1;
+  background-color: #1a2a42;
+  border: 1px solid #2a3f5f;
+  border-radius: 20px;
+  padding: 0.6rem 1rem;
+  color: #e8eaf0;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.comentario-input::placeholder {
+  color: #6b7a99;
+}
+
+.comentario-input:focus {
+  border-color: #f4566a;
+}
+
+.comentario-btn-enviar {
+  background-color: #f4566a;
+  border: none;
+  border-radius: 20px;
+  padding: 0.6rem 1.2rem;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.comentario-btn-enviar:hover {
+  background-color: #ff7a8a;
+}
+
+.comentario-btn-enviar:disabled {
+  background-color: #6b7a99;
+  cursor: not-allowed;
+}
+

@@ -21,15 +21,20 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 use App\Http\Controllers\AnuncioController;
 use App\Http\Controllers\EntradaController;
+use App\Http\Controllers\ComentarioController;
 
 // 1. Rutas Públicas (Invitados y Registrados)
 Route::get('/anuncios', [AnuncioController::class, 'index']);
 Route::get('/anuncios/{id}', [AnuncioController::class, 'show']);
+Route::get('/anuncios/{id}/comentarios', [ComentarioController::class, 'index']);
 
 // 2. Rutas Protegidas (Solo Usuarios Registrados)
 Route::middleware('auth')->group(function () {
     // Comprar entrada para un anuncio
     Route::post('/anuncios/{id}/comprar', [EntradaController::class, 'comprar']);
+
+    // Comentar en un anuncio
+    Route::post('/anuncios/{id}/comentarios', [ComentarioController::class, 'store']);
     
     // Gestión de entradas del usuario
     Route::get('/mis-entradas', [EntradaController::class, 'misEntradas']);

@@ -93,3 +93,14 @@ export async function actualizarSaldo(operacion, monto) {
     body: JSON.stringify({ operacion, monto: parseFloat(monto) }),
   });
 }
+
+export async function fetchComentarios(anuncioId) {
+  return await apiFetch(`/anuncios/${anuncioId}/comentarios`);
+}
+
+export async function crearComentario(anuncioId, texto) {
+  return await apiFetch(`/anuncios/${anuncioId}/comentarios`, {
+    method: 'POST',
+    body: JSON.stringify({ texto }),
+  });
+}

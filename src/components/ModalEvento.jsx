@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchAnuncioDetalle, comprarEntrada } from '../api';
+import { fetchAnuncioDetalle, comprarEntrada, fetchComentarios, crearComentario } from '../api';
 import './ModalEvento.css';
 
 function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
@@ -11,14 +11,22 @@ function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
   const [cantidadCompra, setCantidadCompra] = useState(1);
   const [error, setError] = useState('');
   const [exito, setExito] = useState('');
+  const [comentarios, setComentarios] = useState([]);
+  const [nuevoComentario, setNuevoComentario] = useState('');
+  const [enviandoComentario, setEnviandoComentario] = useState(false);
+  const comentariosEndRef = useRef(null);
 
   // Cargar detalles completos del anuncio en tiempo real si no es una entrada ya comprada
   useEffect(() => {
     if (!evento.esEntrada) {
       setCargando(true);
-      fetchAnuncioDetalle(evento.id)
-        .then((data) => {
-          setDetalles(data);
+      Promise.all([
+        fetchAnuncioDetalle(evento.id),
+        fetchComentarios(evento.id),
+      ])
+        .then(([anuncioData, comentariosData]) => {
+          setDetalles(anuncioData);
+          setComentarios(comentariosData || []);
         })
         .catch((err) => {
           setError(err.message || 'Error al cargar los detalles del evento.');
@@ -56,9 +64,34 @@ function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
     if (e.target === e.currentTarget) onCerrar();
   };
 
+  const handleEnviarComentario = async () => {
+    if (!nuevoComentario.trim() || enviandoComentario) return;
+    setEnviandoComentario(true);
+    try {
+      const comentarioCreado = await crearComentario(evento.id, nuevoComentario.trim());
+      setComentarios((prev) => [...prev, comentarioCreado]);
+      setNuevoComentario('');
+      // Scroll al final de los comentarios
+      setTimeout(() => {
+        comentariosEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } catch (err) {
+      setError(err.message || 'Error al enviar el comentario.');
+    } finally {
+      setEnviandoComentario(false);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleEnviarComentario();
+    }
+  };
+
   const isGuest = !usuario;
-  const isUser = usuario && usuario.role === 'usuario';
-  const isAdmin = usuario && usuario.role === 'admin';
+  const isUser = usuario && usuario.role === 'USUARIO';
+  const isAdmin = usuario && usuario.role === 'ADMIN';
 
   // Comprobar si el evento ya ha pasado
   const eventoFinalizado = detalles?.fecha
@@ -245,6 +278,57 @@ function ModalEvento({ evento, usuario, onCerrar, onCompraExitosa }) {
                       </>
                     )}
                   </div>
+
+                  {/* ── Sección de Comentarios ── */}
+                  {!evento.esEntrada && (
+                    <div className="comentarios-section">
+                      <h3 className="comentarios-titulo">💬 Comentarios ({comentarios.length})</h3>
+
+                      {comentarios.length === 0 ? (
+                        <p className="comentarios-vacio">Aún no hay comentarios. ¡Sé el primero!</p>
+                      ) : (
+                        <div className="comentarios-lista">
+                          {comentarios.map((c) => (
+                            <div key={c.id} className="comentario-item">
+                              <div className="comentario-header">
+                                <span className="comentario-autor">{c.user?.name || 'Usuario'}</span>
+                                <span className="comentario-fecha">
+                                  {new Date(c.created_at).toLocaleDateString('es-ES', {
+                                    day: 'numeric', month: 'short', year: 'numeric'
+                                  })}
+                                </span>
+                              </div>
+                              <p className="comentario-texto">{c.texto}</p>
+                            </div>
+                          ))}
+                          <div ref={comentariosEndRef} />
+                        </div>
+                      )}
+
+                      {/* Input solo para usuarios autenticados (no admin, no guest, no finalizado) */}
+                      {isUser && !eventoFinalizado && (
+                        <div className="comentario-input-row">
+                          <input
+                            type="text"
+                            className="comentario-input"
+                            placeholder="Escribe un comentario..."
+                            value={nuevoComentario}
+                            onChange={(e) => setNuevoComentario(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            disabled={enviandoComentario}
+                            maxLength={1000}
+                          />
+                          <button
+                            className="comentario-btn-enviar"
+                            onClick={handleEnviarComentario}
+                            disabled={!nuevoComentario.trim() || enviandoComentario}
+                          >
+                            {enviandoComentario ? '...' : 'Enviar'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
