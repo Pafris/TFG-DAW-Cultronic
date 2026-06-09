@@ -19,38 +19,50 @@ class EntradaController extends Controller
             return response()->json(['error' => 'Este anuncio no tiene entradas a la venta.'], 400);
         }
 
+        // Obtener cantidad de entradas a comprar (entre 1 y 5)
+        $cantidad = (int) $request->input('cantidad', 1);
+        if ($cantidad < 1 || $cantidad > 5) {
+            return response()->json(['error' => 'La cantidad de entradas a comprar debe estar entre 1 y 5.'], 400);
+        }
+
         try {
             // Usamos una transacción para evitar condiciones de carrera (dos personas comprando a la vez)
-            $entradaComprada = \Illuminate\Support\Facades\DB::transaction(function () use ($user, $anuncio_id) {
+            $entradasCompradas = \Illuminate\Support\Facades\DB::transaction(function () use ($user, $anuncio_id, $cantidad) {
                 
-                // 1. Buscamos una entrada que no tenga dueño. lockForUpdate bloquea la fila hasta terminar.
-                $entrada = \App\Models\Entrada::where('anuncio_id', $anuncio_id)
+                // 1. Buscamos las entradas que no tengan dueño
+                $entradas = \App\Models\Entrada::where('anuncio_id', $anuncio_id)
                             ->whereNull('user_id')
                             ->lockForUpdate()
-                            ->first();
+                            ->take($cantidad)
+                            ->get();
 
-                if (!$entrada) {
-                    throw new \Exception('No quedan entradas disponibles (Sold out).', 404);
+                if ($entradas->count() < $cantidad) {
+                    throw new \Exception('No quedan suficientes entradas disponibles.', 400);
                 }
 
+                // Calcular el precio total
+                $precioTotal = $entradas->sum('precio');
+
                 // 2. Verificamos que el usuario tenga saldo suficiente
-                if ($user->dinero < $entrada->precio) {
-                    throw new \Exception('Saldo insuficiente para comprar esta entrada.', 400);
+                if ($user->dinero < $precioTotal) {
+                    throw new \Exception('Saldo insuficiente para comprar estas entradas.', 400);
                 }
 
                 // 3. Efectuamos la compra
-                $user->dinero -= $entrada->precio;
+                $user->dinero -= $precioTotal;
                 $user->save();
 
-                $entrada->user_id = $user->id;
-                $entrada->save();
+                foreach ($entradas as $entrada) {
+                    $entrada->user_id = $user->id;
+                    $entrada->save();
+                }
 
-                return $entrada;
+                return $entradas;
             });
 
             return response()->json([
-                'message' => 'Entrada comprada con éxito.',
-                'entrada' => $entradaComprada
+                'message' => $cantidad === 1 ? 'Entrada comprada con éxito.' : "{$cantidad} entradas compradas con éxito.",
+                'entradas' => $entradasCompradas
             ]);
 
         } catch (\Exception $e) {
